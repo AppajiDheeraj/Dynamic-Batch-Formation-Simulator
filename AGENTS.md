@@ -76,80 +76,37 @@ Strong success criteria let the LLM loop independently. Weak criteria ("make it 
 
 ## Project: Dynamic Batch Formation Simulator
 
-### Objective
+### Problem statement
 
-Build an original, Dockerized benchmarking framework that implements and compares three LLM inference scheduling strategies:
+Implement **fixed batching**, **dynamic batching**, and **continuous batching** strategies for LLM inference and compare their performance inside a Docker environment.
 
-- **Fixed batching:** wait for a fixed-size group, then process the whole batch together.
-- **Dynamic batching:** form batches from queued requests using configurable size and wait-time limits.
-- **Continuous batching:** admit new requests as active sequences finish, scheduling work at token/iteration granularity.
+- **Expected output:** Dockerized benchmarking framework, performance comparison graphs, experimental report.
+- **Mandatory:** `Dockerfile`, Docker Compose configuration, `README.md` with setup instructions, source code repository, experimental evaluation with graphs.
+- **References:** ORCA (OSDI '22) https://www.usenix.org/conference/osdi22/presentation/yu · vLLM https://github.com/vllm-project/vllm · Docker https://www.docker.com/
 
-The project must make the behavioral and performance differences between the strategies measurable and easy to explain. It is a simulator/benchmarking assignment; do not copy an existing implementation from vLLM, ORCA, or another repository.
+### TA guidance (meeting)
 
-### Required deliverables
+- This is **not a simulation**. Load a real LLM and run real inference.
+- Use a GPU model that fits in **3–4 GB VRAM** on an **NVIDIA RTX** GPU, running **inside our Docker container**.
+- Run the tests **sequentially**, one batching strategy at a time, end to end.
+- ORCA was cited as a reference (it introduced iteration-level scheduling, i.e. continuous batching). vLLM is also a another reference.
+- Final results need proper graphs.
 
-The repository is complete only when it contains:
+### Assignment rules
 
-- Working Python 3.10+ source code for all three batching strategies.
-- A reproducible workload generator with request arrival times and varying input/output sequence lengths.
-- A common benchmark runner so every strategy receives the same workload and resource assumptions.
-- Raw experiment results and performance comparison graphs.
-- A `Dockerfile` and Docker Compose configuration that run the benchmark without a host Python setup.
-- A clear `README.md` with architecture, setup, Docker commands, experiment commands, output locations, and interpretation guidance.
-- An experimental report in PDF form covering understanding, design, workflow, experiments, results, limitations, and conclusions.
-- A GitHub-ready source repository. Never commit secrets, generated caches, virtual environments, or large model weights.
+- **Marks (25):** Implementation 12 · Documentation and submission 5 · Understanding and presentation 8.
+- **Deadline:** November 01, 2026, 11:59 pm, Moodle only. Mid-sem evaluation and detailed presentation around the 3rd week of November 2026.
+- Understand and implement the problem (topic, problem, technology adopted, tool used).
+- Report (PDF): understanding, workflow, and results generated.
+- Upload source to GitHub with a proper README and share with the mentor. **Do not copy existing source code.**
+- Code must be running and **approved by the mentor**.
+- Any one member submits. Zip name: `<firstname>_<rollnumber>.zip` (e.g. `xyz_191CS101.zip`). Master folder holds exactly 3 items: project folder, report (PDF), `readme.txt`.
 
-### Evaluation metrics
+### Tools
 
-At minimum, record and compare:
+If the problem statement names a tool or version, follow it over this list. Course-wide pool (use only what this project needs): Python 3.10+, PyTorch, NumPy, Pandas, SciPy, Matplotlib, Git · Docker and Docker Compose · FastAPI or Flask · nginx or Envoy · Prometheus and Grafana · InfluxDB · Apache JMeter · Kafka, MQTT (Mosquitto) · SQLite · AWS EC2 or free cloud GPU (Colab, Kaggle) where specified · Ollama or llama.cpp, ngrok, Flower (flwr) for the LLM/FL projects that need them. (SUMO/TraCI and CloudSim Plus are for other groups' projects.)
 
-- Throughput (requests/second and, where modeled, tokens/second).
-- End-to-end latency, including mean and percentile values such as p50, p95, and p99.
-- Queue/waiting time.
-- Time to first token when the simulation models token-level generation.
-- Makespan and resource utilization.
-- Batch-size behavior over time.
+### Team and repository
 
-Graphs must be generated from saved experiment data rather than hand-entered values. Use fixed random seeds and preserve experiment parameters with each result so runs are reproducible.
-
-### Implementation boundaries
-
-- Prefer a lightweight discrete-event simulator using Python, NumPy, Pandas, and Matplotlib. Use PyTorch only if an actual tensor/model workload is intentionally benchmarked.
-- Keep one request model and one metrics pipeline shared by all strategies; vary only scheduling behavior.
-- Separate simulated time from wall-clock runtime and label results clearly. Never present simulated measurements as real GPU inference measurements.
-- Use identical workloads, capacity assumptions, warm-up rules, and metric definitions when comparing strategies.
-- Make workload parameters configurable at the command line or in one small configuration file: request count, arrival rate, input/output length distribution, batch capacity, batching timeout, and random seed.
-- Validate configuration and untrusted input at the boundary. Fail with an actionable message when a configuration is invalid.
-- Keep the default experiment small enough to run on a CPU in Docker. Optional GPU experiments must not be required for basic setup or grading.
-- Add the smallest useful automated tests for scheduler invariants and metric calculations. In particular, requests must not be lost, duplicated, processed before arrival, or reported with negative timing values.
-- Do not add FastAPI, Flask, Prometheus, Grafana, JMeter, Kafka, or other infrastructure unless a concrete project requirement later calls for it.
-
-### Definition of done
-
-Before calling the project complete, verify:
-
-1. The test suite passes.
-2. One command builds the Docker image and one documented Docker Compose command runs the full default experiment.
-3. The default run executes all three strategies against the same seeded workload.
-4. The run writes machine-readable raw results plus labeled comparison graphs to documented locations.
-5. A clean checkout can reproduce the documented outputs using only Docker and Docker Compose.
-6. The README and report describe the exact implementation and actual results; they must not claim unrun experiments.
-7. Every locally available affected platform is checked, and any platform not tested is stated explicitly.
-
-### Academic and submission constraints
-
-- Implementation is worth 12 marks, documentation/submission 5 marks, and understanding/presentation 8 marks.
-- Submission deadline: **November 1, 2026 at 11:59 pm**, via Moodle only.
-- Obtain mentor approval after demonstrating that the code runs.
-- Upload the source to GitHub with a proper README and share it with the mentor.
-- Final submission archive format: `<firstname>_<rollnumber>.zip`.
-- The archive's master folder must contain exactly the project folder, the report PDF, and `readme.txt`.
-- A detailed presentation/mid-semester evaluation is expected around the third week of November 2026.
-
-### Primary references
-
-- ORCA (OSDI 2022): https://www.usenix.org/conference/osdi22/presentation/yu
-- vLLM: https://github.com/vllm-project/vllm
-- Docker documentation: https://www.docker.com/
-
-Use these references to understand scheduling concepts and terminology. Cite borrowed ideas in the report and README, but write original code suited to this simulator.
+- Repo: https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator
+- GitHub collaborators: `AppajiDheeraj` (owner), `AshleshPrabhu`, `rishi746`, `Sachin210506`
