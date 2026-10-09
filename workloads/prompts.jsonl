@@ -1,0 +1,8 @@
+{"id":"r1","prompt":"Explain cloud computing in one sentence.","arrival_ms":0,"max_new_tokens":24}
+{"id":"r2","prompt":"Name two benefits of batching LLM requests.","arrival_ms":20,"max_new_tokens":32}
+{"id":"r3","prompt":"What is GPU memory used for during inference?","arrival_ms":45,"max_new_tokens":28}
+{"id":"r4","prompt":"Give one difference between latency and throughput.","arrival_ms":80,"max_new_tokens":30}
+{"id":"r5","prompt":"Summarize continuous batching in one sentence.","arrival_ms":120,"max_new_tokens":24}
+{"id":"r6","prompt":"Why should a benchmark use the same workload for each run?","arrival_ms":170,"max_new_tokens":32}
+{"id":"r7","prompt":"Define time to first token.","arrival_ms":230,"max_new_tokens":22}
+{"id":"r8","prompt":"Write a short greeting for a project demonstration.","arrival_ms":300,"max_new_tokens":20}
