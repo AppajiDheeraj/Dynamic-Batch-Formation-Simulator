@@ -1,2 +1,113 @@
-# Dynamic-Batch-Formation-Simulator
-Implement fixed batching, dynamic batching, and continuous batching strategies for LLM inference and compare their performance inside a Docker environment.
+# Dynamic batch formation benchmark
+
+This project compares fixed, dynamic, and continuous batching with real LLM inference. Each run loads the same Qwen model and uses the same saved requests. Only the scheduling rule changes.
+
+## What it uses
+
+- Python 3.11 in the Docker image
+- PyTorch and Hugging Face Transformers
+- `Qwen/Qwen2.5-0.5B-Instruct` in FP16
+- Docker Compose and an NVIDIA GPU
+- Matplotlib for graphs
+
+There is no HTTP server. There is no `curl`, Ollama, LM Studio, or vLLM process. A Python runner sends the saved workload straight to the shared inference engine.
+
+## Windows setup
+
+Install these items on the RTX laptop:
+
+1. The current NVIDIA driver.
+2. WSL 2.
+3. Docker Desktop with the WSL 2 engine.
+4. Git.
+
+Open PowerShell and check the GPU first:
+
+```powershell
+nvidia-smi
+docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+```
+
+Clone the repository and build the image:
+
+```powershell
+git clone https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator.git
+cd Dynamic-Batch-Formation-Simulator
+docker compose build
+```
+
+Run the CPU-only scheduler tests:
+
+```powershell
+docker compose run --rm benchmark pytest -q
+```
+
+Run a small GPU smoke test. This downloads the model on the first run:
+
+```powershell
+docker compose run --rm benchmark python -m batch_bench.run --strategy fixed --max-requests 2 --batch-size 2
+```
+
+Run the full comparison:
+
+```powershell
+docker compose run --rm benchmark
+```
+
+The command runs fixed, dynamic, and continuous batching in separate processes. The runs are sequential. A failed run stops the command.
+
+## Output
+
+Each strategy writes these files under `results/<strategy>/`:
+
+- `requests.csv` has request timing, token counts, and generated text.
+- `steps.csv` has token-step time and active batch size.
+- `summary.json` has throughput, p50 and p95 timing, makespan, and peak CUDA memory.
+
+The full run also creates:
+
+- `results/throughput.png`
+- `results/latency.png`
+- `results/ttft.png`
+- `results/batch_size.png`
+
+## Scheduling rules
+
+Fixed batching waits for a full batch. It runs that closed batch until every request ends. The last saved batch may be smaller.
+
+Dynamic batching waits until the batch fills or the oldest waiting request reaches the wait limit. It then runs a closed batch until every request ends.
+
+Continuous batching checks for free slots before every token step. It admits waiting requests without waiting for the other active requests to end.
+
+ORCA provides the iteration-level scheduling idea used by the continuous policy. vLLM is a reference implementation of production continuous batching. This project does not copy either codebase and does not claim to match vLLM. It keeps one simple inference path so the three student-written schedulers can be compared.
+
+## Limits
+
+The engine recomputes each active sequence for every token and does not use a KV cache. This is slower than a production engine, but all three strategies use the same path. Prompts are truncated to 128 tokens. The workload controls each request's output limit.
+
+Test the chosen batch size on the target 3 GB to 4 GB RTX GPU. Lower `--batch-size` if CUDA runs out of memory.
+
+## Useful options
+
+```text
+--strategy fixed|dynamic|continuous|all
+--workload workloads/prompts.jsonl
+--model Qwen/Qwen2.5-0.5B-Instruct
+--batch-size 4
+--dynamic-wait-ms 25
+--max-requests 2
+--output-dir results
+```
+
+## GitHub workflow
+
+Pull the latest branch before a test. Commit source changes. Do not commit downloaded model files or generated results.
+
+```powershell
+git pull
+git add .
+git commit -m "Implement batching benchmark"
+git push
+```
+
+Keep the final tested CSV files and graphs outside normal development commits unless the mentor asks for them in GitHub.
