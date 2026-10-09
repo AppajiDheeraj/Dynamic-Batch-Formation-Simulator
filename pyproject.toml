@@ -9,7 +9,7 @@ description = "Compare fixed, dynamic, and continuous LLM batching."
 requires-python = ">=3.10,<3.13"
 dependencies = [
   "matplotlib==3.9.2",
-  "torch==2.5.1",
+  "torch==2.8.0",
   "transformers==4.46.3",
 ]
 
