@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "batch-bench"
+version = "0.1.0"
+description = "Compare fixed, dynamic, and continuous LLM batching."
+requires-python = ">=3.10,<3.13"
+dependencies = [
+  "matplotlib==3.9.2",
+  "torch==2.5.1",
+  "transformers==4.46.3",
+]
+
+[project.optional-dependencies]
+test = ["pytest==8.3.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
