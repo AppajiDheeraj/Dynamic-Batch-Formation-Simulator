@@ -1,0 +1,17 @@
+services:
+  benchmark:
+    build: .
+    command: python -m batch_bench.run --strategy all
+    volumes:
+      - ./results:/app/results
+      - hf-cache:/root/.cache/huggingface
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  hf-cache:
