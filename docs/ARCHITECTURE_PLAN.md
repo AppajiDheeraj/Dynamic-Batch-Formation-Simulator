@@ -10,7 +10,7 @@
 | Output | CSV and Matplotlib graphs |
 | Runtime | Docker Compose with NVIDIA GPU access |
 
-The model has about 1 GB of FP16 weights. We must confirm total memory use on the target RTX GPU.
+The model has about 1 GB of FP16 weights. The benchmark has been validated on the target RTX GPU.
 
 We will not use Ollama, LM Studio, or vLLM as the server. These tools control batching inside their engines. That would hide our batching code.
 
@@ -31,15 +31,15 @@ flowchart TB
     H --> I[CSV results and graphs]
 ```
 
-The workload generator reads `prompts.jsonl` and sends real requests. It does not simulate model work. The Qwen model generates every output on the GPU.
+The workload generator reads the dense or sparse JSONL file and sends real requests. It does not simulate model work. The Qwen model generates every output on the GPU.
 
-There is no HTTP server and no `curl`. One command runs all strategies in order:
+There is no HTTP server and no `curl`. One command runs the complete experiment:
 
 ```bash
-docker compose run --rm benchmark python -m batch_bench.run --strategy all
+docker compose run --rm benchmark
 ```
 
-The runner starts a clean process for each strategy. The runs never overlap.
+The runner starts a clean process for each strategy. It runs dense and sparse workloads, repeats each strategy three times, and rotates the order between repetitions. The runs never overlap.
 
 ## Strategies
 
@@ -47,7 +47,7 @@ The runner starts a clean process for each strategy. The runs never overlap.
 - Dynamic takes up to `B` requests after a short wait, then runs the batch to the end.
 - Continuous checks after each token and fills each free slot with a waiting request.
 
-All runs use the same model, prompts, token limits, and GPU. Only the scheduler changes.
+All runs use the same model, prompts, token limits, and GPU. Only the scheduler changes. Each graph uses the median of three runs and shows the run range as error bars.
 
 ## ORCA and vLLM
 
@@ -64,10 +64,10 @@ run.py          Sequential runs and CSV output
 plot.py         Graphs
 ```
 
-First, run the scheduler tests. Next, run a two-request GPU smoke test. Then run the saved workload and create the graphs.
+First, run the scheduler tests. Next, run a two-request GPU smoke test. Then run the complete experiment and create the report graphs.
 
 The first version recomputes full active sequences with `use_cache=False`. All strategies use this same path. A production KV-cache manager is outside the first version.
 
-## Remaining submission work
+## Submission artifacts
 
-This repository contains the first working version. The team must still run it on the RTX laptop, save the CSV files and graphs, and get mentor approval. The final submission also needs the PDF report and the required ZIP layout.
+The repository includes the Docker benchmark, both workloads, report source, measured graphs, and PDF report. Raw per-request and per-step measurements remain under the ignored `results/` directory because they are reproducible with the Compose command.

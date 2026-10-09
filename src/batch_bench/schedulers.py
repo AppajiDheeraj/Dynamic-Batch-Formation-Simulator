@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import time
 from collections import deque
 from dataclasses import dataclass, field
@@ -136,8 +137,8 @@ class ContinuousPolicy:
 def make_policy(strategy: str, batch_size: int, dynamic_wait_ms: float) -> Policy:
     if batch_size < 1:
         raise ValueError("batch size must be at least 1")
-    if dynamic_wait_ms < 0:
-        raise ValueError("dynamic wait must not be negative")
+    if not math.isfinite(dynamic_wait_ms) or dynamic_wait_ms < 0:
+        raise ValueError("dynamic wait must be a finite non-negative number")
     if strategy == "fixed":
         return FixedPolicy(batch_size)
     if strategy == "dynamic":

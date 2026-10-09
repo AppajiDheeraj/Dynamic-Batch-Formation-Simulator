@@ -87,10 +87,10 @@ def run_one(args: argparse.Namespace) -> None:
     from .model import QwenEngine
 
     requests = load_workload(args.workload, args.max_requests)
+    policy = make_policy(args.strategy, args.batch_size, args.dynamic_wait_ms)
     engine = QwenEngine(args.model)
     engine.warm_up()
     clock = SystemClock()
-    policy = make_policy(args.strategy, args.batch_size, args.dynamic_wait_ms)
     completed, steps = run_scheduler(requests, policy, engine, clock)
 
     result_dir = args.output_dir / args.strategy
@@ -147,34 +147,38 @@ def run_one(args: argparse.Namespace) -> None:
 
 def _run_all(args: argparse.Namespace) -> None:
     expected_ids = {request.id for request in load_workload(args.workload, args.max_requests)}
-    for strategy in STRATEGIES:
-        command = [
-            sys.executable,
-            "-m",
-            "batch_bench.run",
-            "--strategy",
-            strategy,
-            "--workload",
-            str(args.workload),
-            "--model",
-            args.model,
-            "--batch-size",
-            str(args.batch_size),
-            "--dynamic-wait-ms",
-            str(args.dynamic_wait_ms),
-            "--output-dir",
-            str(args.output_dir),
-        ]
-        if args.max_requests is not None:
-            command.extend(["--max-requests", str(args.max_requests)])
-        subprocess.run(command, check=True)
-        with (args.output_dir / strategy / "requests.csv").open(newline="", encoding="utf-8") as handle:
-            result_ids = [row["id"] for row in csv.DictReader(handle)]
-        if len(result_ids) != len(set(result_ids)) or set(result_ids) != expected_ids:
-            raise RuntimeError(f"{strategy} results do not match the workload request IDs")
+    for repetition in range(args.repetitions):
+        run_dir = args.output_dir if args.repetitions == 1 else args.output_dir / f"run_{repetition + 1}"
+        offset = repetition % len(STRATEGIES)
+        strategies = STRATEGIES[offset:] + STRATEGIES[:offset]
+        for strategy in strategies:
+            command = [
+                sys.executable,
+                "-m",
+                "batch_bench.run",
+                "--strategy",
+                strategy,
+                "--workload",
+                str(args.workload),
+                "--model",
+                args.model,
+                "--batch-size",
+                str(args.batch_size),
+                "--dynamic-wait-ms",
+                str(args.dynamic_wait_ms),
+                "--output-dir",
+                str(run_dir),
+            ]
+            if args.max_requests is not None:
+                command.extend(["--max-requests", str(args.max_requests)])
+            subprocess.run(command, check=True)
+            with (run_dir / strategy / "requests.csv").open(newline="", encoding="utf-8") as handle:
+                result_ids = [row["id"] for row in csv.DictReader(handle)]
+            if len(result_ids) != len(set(result_ids)) or set(result_ids) != expected_ids:
+                raise RuntimeError(f"{strategy} results do not match the workload request IDs")
     from .plot import create_plots
 
-    create_plots(args.output_dir)
+    create_plots(args.output_dir, args.repetitions)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -186,12 +190,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dynamic-wait-ms", type=float, default=25)
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
     parser.add_argument("--max-requests", type=int)
+    parser.add_argument("--repetitions", type=int, default=1)
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
     try:
+        make_policy("fixed", args.batch_size, args.dynamic_wait_ms)
+        if args.repetitions < 1:
+            raise ValueError("repetitions must be at least 1")
+        if args.strategy != "all" and args.repetitions != 1:
+            raise ValueError("repetitions are supported only with --strategy all")
         if args.strategy == "all":
             _run_all(args)
         else:
