@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import math
 from collections.abc import Sequence
+
+import pytest
 
 from batch_bench.schedulers import ActiveRequest, RequestSpec, make_policy, run_scheduler
 
@@ -104,3 +107,8 @@ def test_requests_are_not_lost_duplicated_or_admitted_early() -> None:
     assert all(result.queue_ms >= 0 for result in completed.values())
     assert all(result.ttft_ms >= 0 for result in completed.values())
     assert all(result.latency_ms >= 0 for result in completed.values())
+
+
+def test_dynamic_wait_must_be_finite() -> None:
+    with pytest.raises(ValueError, match="finite"):
+        make_policy("dynamic", 2, math.nan)
