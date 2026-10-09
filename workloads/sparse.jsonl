@@ -1,0 +1,30 @@
+{"id":"s01","prompt":"Explain cloud computing in one sentence.","arrival_ms":0,"max_new_tokens":16}
+{"id":"s02","prompt":"Name two benefits of batching LLM requests.","arrival_ms":400,"max_new_tokens":32}
+{"id":"s03","prompt":"What is GPU memory used for during inference?","arrival_ms":800,"max_new_tokens":48}
+{"id":"s04","prompt":"Give one difference between latency and throughput.","arrival_ms":1200,"max_new_tokens":16}
+{"id":"s05","prompt":"Summarize continuous batching in one sentence.","arrival_ms":1600,"max_new_tokens":32}
+{"id":"s06","prompt":"Why should a benchmark reuse the same workload?","arrival_ms":2000,"max_new_tokens":48}
+{"id":"s07","prompt":"Define time to first token.","arrival_ms":2400,"max_new_tokens":16}
+{"id":"s08","prompt":"Write a short greeting for a project demonstration.","arrival_ms":2800,"max_new_tokens":32}
+{"id":"s09","prompt":"Describe fixed batching in one sentence.","arrival_ms":3200,"max_new_tokens":48}
+{"id":"s10","prompt":"What does an inference scheduler control?","arrival_ms":3600,"max_new_tokens":16}
+{"id":"s11","prompt":"Explain cloud computing in one sentence.","arrival_ms":4000,"max_new_tokens":32}
+{"id":"s12","prompt":"Name two benefits of batching LLM requests.","arrival_ms":4400,"max_new_tokens":48}
+{"id":"s13","prompt":"What is GPU memory used for during inference?","arrival_ms":4800,"max_new_tokens":16}
+{"id":"s14","prompt":"Give one difference between latency and throughput.","arrival_ms":5200,"max_new_tokens":32}
+{"id":"s15","prompt":"Summarize continuous batching in one sentence.","arrival_ms":5600,"max_new_tokens":48}
+{"id":"s16","prompt":"Why should a benchmark reuse the same workload?","arrival_ms":6000,"max_new_tokens":16}
+{"id":"s17","prompt":"Define time to first token.","arrival_ms":6400,"max_new_tokens":32}
+{"id":"s18","prompt":"Write a short greeting for a project demonstration.","arrival_ms":6800,"max_new_tokens":48}
+{"id":"s19","prompt":"Describe fixed batching in one sentence.","arrival_ms":7200,"max_new_tokens":16}
+{"id":"s20","prompt":"What does an inference scheduler control?","arrival_ms":7600,"max_new_tokens":32}
+{"id":"s21","prompt":"Explain cloud computing in one sentence.","arrival_ms":8000,"max_new_tokens":48}
+{"id":"s22","prompt":"Name two benefits of batching LLM requests.","arrival_ms":8400,"max_new_tokens":16}
+{"id":"s23","prompt":"What is GPU memory used for during inference?","arrival_ms":8800,"max_new_tokens":32}
+{"id":"s24","prompt":"Give one difference between latency and throughput.","arrival_ms":9200,"max_new_tokens":48}
+{"id":"s25","prompt":"Summarize continuous batching in one sentence.","arrival_ms":9600,"max_new_tokens":16}
+{"id":"s26","prompt":"Why should a benchmark reuse the same workload?","arrival_ms":10000,"max_new_tokens":32}
+{"id":"s27","prompt":"Define time to first token.","arrival_ms":10400,"max_new_tokens":48}
+{"id":"s28","prompt":"Write a short greeting for a project demonstration.","arrival_ms":10800,"max_new_tokens":16}
+{"id":"s29","prompt":"Describe fixed batching in one sentence.","arrival_ms":11200,"max_new_tokens":32}
+{"id":"s30","prompt":"What does an inference scheduler control?","arrival_ms":11600,"max_new_tokens":48}
