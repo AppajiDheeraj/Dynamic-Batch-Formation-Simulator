@@ -1,7 +1,7 @@
 services:
   benchmark:
     build: .
-    command: python -m batch_bench.run --strategy all
+    command: python -m batch_bench.experiment
     volumes:
       - ./results:/app/results
       - hf-cache:/root/.cache/huggingface

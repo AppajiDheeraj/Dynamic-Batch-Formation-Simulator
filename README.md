@@ -25,7 +25,7 @@ Open PowerShell and check the GPU first:
 
 ```powershell
 nvidia-smi
-docker run --rm --gpus all nvidia/cuda:12.4.1-base-ubuntu22.04 nvidia-smi
+docker run --rm --gpus all nvidia/cuda:12.8.1-base-ubuntu22.04 nvidia-smi
 ```
 
 Clone the repository and build the image:
@@ -54,22 +54,24 @@ Run the full comparison:
 docker compose run --rm benchmark
 ```
 
-The command runs fixed, dynamic, and continuous batching in separate processes. The runs are sequential. A failed run stops the command.
+The command benchmarks two 30-request workloads. The dense workload sends a request every 20 ms. The sparse workload sends a request every 400 ms. Each uses a repeating mix of 16, 32, and 48 output-token limits.
+
+Each strategy runs three times in a separate process. The strategy order rotates between repetitions, but runs remain sequential. Graphs show the median and min-to-max error bars. A failed run stops the command.
 
 ## Output
 
-Each strategy writes these files under `results/<strategy>/`:
+Each strategy writes these files under `results/<workload>/run_<number>/<strategy>/`:
 
 - `requests.csv` has request timing, token counts, and generated text.
 - `steps.csv` has token-step time and active batch size.
 - `summary.json` has throughput, p50 and p95 timing, makespan, and peak CUDA memory.
 
-The full run also creates:
+The full run creates four graphs under both `results/dense/` and `results/sparse/`:
 
-- `results/throughput.png`
-- `results/latency.png`
-- `results/ttft.png`
-- `results/batch_size.png`
+- `throughput.png`: output-token throughput
+- `latency.png`: p50 and p95 request latency
+- `ttft.png`: p50 and p95 time to first token
+- `batch_size.png`: average active batch size
 
 ## Scheduling rules
 
@@ -97,7 +99,10 @@ Test the chosen batch size on the target 3 GB to 4 GB RTX GPU. Lower `--batch-si
 --dynamic-wait-ms 25
 --max-requests 2
 --output-dir results
+--repetitions 3
 ```
+
+`--repetitions` is available with `--strategy all`. The default is one run for quick checks.
 
 ## GitHub workflow
 
@@ -110,4 +115,4 @@ git commit -m "Implement batching benchmark"
 git push
 ```
 
-Keep the final tested CSV files and graphs outside normal development commits unless the mentor asks for them in GitHub.
+The measured graphs used in the report are stored under `docs/figures/`. Raw CSV and JSON results stay under the ignored `results/` directory.
