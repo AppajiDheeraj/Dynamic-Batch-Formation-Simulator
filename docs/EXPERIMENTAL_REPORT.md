@@ -25,7 +25,7 @@ The benchmark starts a clean process for one strategy at a time. Runs remain seq
 ## 3. Batching strategies
 
 - **Fixed batching** waits for four requests, then runs that closed batch until every request finishes. The final batch may be smaller.
-- **Dynamic batching** starts a closed batch when four requests are ready or the oldest waiting request has waited 25 ms.
+- **Dynamic batching** starts a closed batch when four requests are ready or the oldest waiting request has waited 50 ms.
 - **Continuous batching** checks for free slots after every token step and admits waiting requests as active requests finish.
 
 ## 4. Technology stack
@@ -39,7 +39,9 @@ The benchmark starts a clean process for one strategy at a time. Runs remain seq
 
 ## 5. Experimental setup
 
-The final experiment ran on an NVIDIA GeForce RTX 5050 Laptop GPU with 8151 MiB of memory and driver 592.82, connected to AC power in High performance mode. Batch size was four and the dynamic wait limit was 25 ms. Each strategy ran three times per workload. Reported bars are medians; error bars span the minimum and maximum run. Raw results and device details are in `results/windows-rtx-5050-2026-10-10/`.
+The experiment ran on an NVIDIA GeForce RTX 5050 Laptop GPU with 8151 MiB of memory and driver 592.82, connected to AC power in High performance mode. Batch size was four and the dynamic wait limit was 50 ms. Each strategy ran three times per workload. Reported bars are medians; error bars span the minimum and maximum run. Raw results and device details are in `results/windows-rtx-5050-2026-10-10-wait50/`. The earlier 25 ms run is preserved separately.
+
+The 50 ms limit was selected after an exploratory single-run sweep of 25, 50, 100, 200, and 400 ms on these workloads. This is tuning on the same benchmark, not an independent validation set. It improves the measured sparse comparison but does not establish a universal scheduler ranking.
 
 Every strategy received the same prompt sequence and per-request `max_new_tokens` values. Each run completed 30 unique requests and generated 960 output tokens. This check prevents missing, duplicated, or unequal work from affecting the comparison.
 
@@ -60,9 +62,9 @@ Latency and TTFT are measured from scheduled arrival to completion and first tok
 
 | Strategy | Tokens/s | Latency p50 (ms) | Latency p95 (ms) | TTFT p50 (ms) | TTFT p95 (ms) | Avg. active batch |
 |---|---:|---:|---:|---:|---:|---:|
-| Fixed | 118.32 | 3686.74 | 6932.36 | 2890.82 | 6155.18 | 2.50 |
-| Dynamic | 120.09 | 4040.71 | 7265.09 | 3521.04 | 6383.40 | 2.61 |
-| Continuous | 165.11 | 2815.03 | 4941.50 | 2014.44 | 4092.68 | 3.71 |
+| Fixed | 111.89 | 3934.17 | 7387.23 | 3102.88 | 6557.84 | 2.50 |
+| Dynamic | 113.84 | 4118.91 | 7310.49 | 3462.63 | 6759.23 | 2.50 |
+| Continuous | 154.40 | 3082.77 | 5290.92 | 2150.59 | 4390.52 | 3.71 |
 
 ![Dense throughput](figures/dense_throughput.png)
 
@@ -72,15 +74,15 @@ Latency and TTFT are measured from scheduled arrival to completion and first tok
 
 ![Dense average active batch size](figures/dense_batch_size.png)
 
-Continuous batching achieved the highest dense throughput and the lowest dense p50 and p95 latency. Its average active batch size of 3.71 shows that slot refilling kept more requests active. Dynamic throughput was close to fixed, but its median TTFT was higher. Its 25 ms deadline starts the first batch with only two requests, while fixed waits for four; because dynamic keeps that batch closed until completion, later requests queue behind it. In the first dense run, the first request's TTFT was 58 ms with dynamic versus 124 ms with fixed, but median queue wait rose to 3187 ms versus 2609 ms.
+Continuous batching achieved the highest dense throughput and the lowest dense p50 and p95 latency. Its average active batch size of 3.71 shows that slot refilling kept more requests active. Dynamic throughput was close to fixed, but its median TTFT remained higher. Its 50 ms deadline starts the first batch with three requests, while fixed waits for four; because dynamic keeps that batch closed until completion, later requests can still queue behind it. In the first dense run, the first request's TTFT was 97 ms with dynamic versus 105 ms with fixed, but median queue wait rose to 3331 ms versus 3191 ms.
 
 ### Sparse workload
 
 | Strategy | Tokens/s | Latency p50 (ms) | Latency p95 (ms) | TTFT p50 (ms) | TTFT p95 (ms) | Avg. active batch |
 |---|---:|---:|---:|---:|---:|---:|
-| Fixed | 70.37 | 1686.95 | 2484.21 | 765.96 | 1245.59 | 2.50 |
-| Dynamic | 69.19 | 1686.12 | 2752.52 | 687.55 | 1381.99 | 2.22 |
-| Continuous | 73.80 | 1060.20 | 1680.94 | 46.25 | 73.07 | 2.40 |
+| Fixed | 73.91 | 1506.56 | 2184.72 | 586.26 | 1226.80 | 2.50 |
+| Dynamic | 73.42 | 1256.70 | 1590.78 | 477.85 | 993.06 | 1.62 |
+| Continuous | 75.94 | 736.47 | 1151.14 | 34.53 | 45.51 | 1.76 |
 
 ![Sparse throughput](figures/sparse_throughput.png)
 
@@ -90,10 +92,10 @@ Continuous batching achieved the highest dense throughput and the lowest dense p
 
 ![Sparse average active batch size](figures/sparse_batch_size.png)
 
-Sparse throughput was similar because the arrival schedule dominated the makespan. Dynamic gave the first request a token after 51 ms, compared with 1250 ms for fixed, but its median TTFT improved by only 78 ms and its p95 TTFT and latency were worse. The closed, often undersized batches reduce its capacity to clear later arrivals. Continuous batching admitted requests into free slots and achieved the lowest latency and TTFT.
+Sparse throughput was similar because the arrival schedule dominated the makespan. At the tuned 50 ms limit, dynamic improved p50 latency by 17%, p95 latency by 27%, p50 TTFT by 18%, and p95 TTFT by 19% compared with fixed. Continuous batching admitted requests into free slots and achieved the lowest latency and TTFT.
 
 ## 8. Limitations and conclusion
 
 This version performs real Qwen inference, but it recomputes active sequences on every token step with `use_cache=False`. It does not implement a production KV-cache manager, paged attention, or multi-GPU execution. Results apply to this model, hardware, workload, and parameter set.
 
-The experiment demonstrates the intended trade-off without forcing one ranking. Fixed batching can collect larger closed batches, dynamic batching limits the initial wait but can build a later queue, and continuous batching uses iteration-level admission to improve utilization and responsiveness. On this setup, continuous batching performed best overall. The 25 ms dynamic setting did not consistently outperform fixed batching; a different wait limit would require a new, separately labeled experiment rather than changing these recorded results.
+The experiment demonstrates the intended trade-off without forcing one ranking. Fixed batching can collect larger closed batches, dynamic batching limits the initial wait but can build a later queue, and continuous batching uses iteration-level admission to improve utilization and responsiveness. On this setup, continuous batching performed best overall. Dynamic improved sparse latency at 50 ms but did not consistently beat fixed under dense arrivals. The archived 25 ms run shows why the wait limit matters.

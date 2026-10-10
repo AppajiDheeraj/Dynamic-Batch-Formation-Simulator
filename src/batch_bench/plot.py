@@ -75,10 +75,11 @@ def create_plots(output_dir: Path, repetitions: int = 1) -> None:
     average_batches = [value for value, _ in batch_stats]
     batch_error = [[error[0] for _, error in batch_stats], [error[1] for _, error in batch_stats]]
     suffix = "" if repetitions == 1 else f" (median of {repetitions} runs)"
+    workload = output_dir.name.capitalize()
 
     _bar(
         output_dir / "throughput.png",
-        "Output-token throughput" + suffix,
+        f"{workload}: output-token throughput (higher is better)" + suffix,
         "tokens per second",
         [throughput],
         ["output tokens"],
@@ -86,7 +87,7 @@ def create_plots(output_dir: Path, repetitions: int = 1) -> None:
     )
     _bar(
         output_dir / "latency.png",
-        "Request latency" + suffix,
+        f"{workload}: request latency (lower is better)" + suffix,
         "milliseconds",
         [
             p50_latency,
@@ -97,7 +98,7 @@ def create_plots(output_dir: Path, repetitions: int = 1) -> None:
     )
     _bar(
         output_dir / "ttft.png",
-        "Time to first token" + suffix,
+        f"{workload}: time to first token (lower is better)" + suffix,
         "milliseconds",
         [
             p50_ttft,
@@ -108,7 +109,7 @@ def create_plots(output_dir: Path, repetitions: int = 1) -> None:
     )
     _bar(
         output_dir / "batch_size.png",
-        "Average active batch size" + suffix,
+        f"{workload}: average active batch size" + suffix,
         "requests",
         [average_batches],
         ["average"],

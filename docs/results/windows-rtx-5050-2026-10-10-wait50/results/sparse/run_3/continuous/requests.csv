@@ -1,0 +1,59 @@
+id,arrival_ms,started_ms,first_token_ms,finished_ms,queue_ms,ttft_ms,latency_ms,prompt_tokens,output_tokens,output_text
+s01,0,0.032986,21.581088,396.061106,0.032986,21.581088,396.061106,8,16," Cloud computing allows users to access and store data and applications over the internet, providing"
+s02,400,400.184378,419.593644,1234.382536,0.18437799999998106,19.593643999999983,834.3825360000001,9,32," 1. Faster response times: Batching LLM requests allows for the processing of multiple requests at once, which can result in faster response times. This is"
+s04,1200,1206.034037,1234.382536,1619.122456,6.034036999999898,34.38253600000007,419.12245600000006,8,16, Latency is the time it takes for a packet to travel from the source to
+s03,800,811.475599,849.647164,2068.176246,11.475598999999988,49.647163999999975,1268.176246,9,48," During inference, GPU memory is used for storing intermediate results and temporary data. This allows the GPU to process multiple data points simultaneously, which can significantly speed up the inference process. The memory used for this purpose is typically referred to as GPU memory"
+s05,1600,1619.247423,1647.886514,2493.988761,19.247423000000026,47.886514000000034,893.9887610000001,9,32," Continuous batching is a method of processing data in real-time, where data is continuously added to a queue and processed in real-time, without the need for manual intervention"
+s07,2400,2422.421577,2445.82453,2861.643997,22.42157700000007,45.82452999999987,461.6439970000001,6,16, I have a string of text that I want to tokenize into words. I want
+s06,2000,2030.681313,2068.176246,3302.730853,30.681313000000046,68.17624599999999,1302.730853,9,48," A. To ensure the workload is not too complex B. To ensure the workload is not too simple C. To ensure the workload is not too difficult D. To ensure the workload is not too difficult and simple
+Answer:
+
+D
+
+The"
+s08,2800,2813.83907,2838.514651,3558.861135,13.839069999999992,38.51465099999996,758.8611350000001,9,32," ""Dear [Name],"" I am excited to show you our latest project demonstration. It's a fantastic opportunity to showcase our innovative technology and demonstrate how it can"
+s10,3600,3605.388047,3631.199432,4001.074308,5.388046999999915,31.199431999999888,401.0743080000002,7,16," It controls the scheduling of which of the following?
+A. Inference tasks
+"
+s09,3200,3210.353704,3234.431125,4339.703649,10.353704000000107,34.431125000000065,1139.703649,7,48," Fixed batching ensures that the same batch is used for all the items in a given order, reducing the number of batches and improving efficiency. 
+
+Fixed batching in one sentence: Fixed batching ensures that the same batch is used for all the items in"
+s11,4000,4001.23513,4026.349367,4728.623892,1.2351300000000265,26.349366999999802,728.6238919999996,8,32," Cloud computing allows users to access and store data and applications over the internet, providing on-demand access to resources and services. 
+
+This sentence encapsulates the essence of"
+s13,4800,4814.071367,4836.756751,5171.562208,14.071366999999555,36.756750999999895,371.5622080000003,9,16," During inference, GPU memory is used for storing intermediate results and temporary data. This"
+s12,4400,4401.990897,4424.098762,5484.107722,1.990896999999677,24.098761999999624,1084.1077219999997,9,48," 1. Faster response times: Batching LLM requests allows for the processing of multiple requests at once, which can result in faster response times. This is because the processing of each request is done in parallel, rather than sequentially, which"
+s14,5200,5212.692932,5235.422533,5925.302322,12.692931999999928,35.42253299999993,725.3023219999995,8,32," Latency is the time it takes for a packet to travel from the source to the destination, while throughput is the amount of data that can be processed or transmitted"
+s16,6000,6014.451695,6036.014383,6380.338894,14.451694999999745,36.014382999999725,380.33889400000044,9,16, A. To ensure the workload is not too complex B. To ensure the workload
+s15,5600,5608.410514,5629.640563,6707.073618,8.410514000000148,29.64056299999993,1107.0736180000004,9,48," Continuous batching is a method of processing data in real-time, where data is continuously added to a queue and processed in real-time, without the need for manual intervention. This allows for faster data processing and reduces the risk of data loss or corruption"
+s17,6400,6402.128812,6426.862851,7126.599508,2.1288119999999253,26.862850999999864,726.5995080000002,6,32, I have a string of text that I want to tokenize into words. I want to know the time it takes to tokenize the string into words. I have a
+s19,7200,7212.497379,7234.980124,7568.947503,12.497379000000365,34.980123999999705,368.9475030000003,7,16, Fixed batching ensures that the same batch is used for all the items in a given
+s18,6800,6810.845173,6832.148838,7889.060759,10.845172999999704,32.14883800000007,1089.060759,9,48," ""Dear [Name],"" I am excited to show you our latest project demonstration. It's a fantastic opportunity to showcase our innovative technology and demonstrate how it can improve your business. Our team has been working tirelessly to create a cutting-edge solution"
+s20,7600,7609.592046,7631.748754,8328.715535,9.592045999999755,31.74875400000019,728.7155349999994,7,32," It controls the scheduling of which of the following?
+A. Inference tasks
+B. Inference results
+C. Inference models
+D. Inference"
+s22,8400,8414.858287,8438.149152,8777.922926,14.858286999999109,38.14915199999996,377.9229259999993,9,16, 1. Faster response times: Batching LLM requests allows for the processing
+s21,8000,8014.686032,8036.99681,9090.311949,14.686031999999614,36.99680999999964,1090.3119490000008,8,48," Cloud computing allows users to access and store data and applications over the internet, providing on-demand access to resources and services. 
+
+This sentence encapsulates the essence of cloud computing by highlighting its key features (on-demand access, resources and services)"
+s23,8800,8800.501881,8823.447996,9506.263589,0.5018810000001395,23.447996000000785,706.2635890000001,9,32," During inference, GPU memory is used for storing intermediate results and temporary data. This allows the GPU to process multiple data points simultaneously, which can significantly speed up the"
+s25,9600,9611.801079,9633.692097,9994.245289,11.801079000000755,33.692096999999194,394.2452890000004,9,16," Continuous batching is a method of processing data in real-time, where data is continuously"
+s24,9200,9211.518709,9234.638359,10324.517118,11.518708999999944,34.63835900000049,1124.5171179999998,8,48," Latency is the time it takes for a packet to travel from the source to the destination, while throughput is the amount of data that can be processed or transmitted in a given time period. Latency is typically measured in milliseconds or seconds,"
+s26,10000,10016.566739,10040.796479,10762.736716,16.56673899999987,40.796479000000545,762.7367159999994,9,32, A. To ensure the workload is not too complex B. To ensure the workload is not too simple C. To ensure the workload is not too difficult D.
+s28,10800,10804.751287,10828.056789,11176.189978,4.751286999999138,28.056789000000208,376.18997800000034,9,16," ""Dear [Name],"" I am excited to show you our latest project demonstration"
+s27,10400,10415.853754,10440.344144,11523.184278,15.853753999999753,40.3441440000006,1123.1842780000006,6,48, I have a string of text that I want to tokenize into words. I want to know the time it takes to tokenize the string into words. I have a function that takes a string and returns a list of words. I want to know
+s29,11200,11221.342692,11245.089364,11944.22086,21.34269200000017,45.08936399999948,744.2208599999994,7,32," Fixed batching ensures that the same batch is used for all the items in a given order, reducing the number of batches and improving efficiency. 
+
+Fixed batching in one"
+s30,11600,11605.990105,11626.052128,12640.863954,5.990105000000767,26.052127999999357,1040.8639540000004,7,48," It controls the scheduling of which of the following?
+A. Inference tasks
+B. Inference results
+C. Inference models
+D. Inference time
+Answer:
+
+A
+
+Which of the following statements about the characteristics of the"
