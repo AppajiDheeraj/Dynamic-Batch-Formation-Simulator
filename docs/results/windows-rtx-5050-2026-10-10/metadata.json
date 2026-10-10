@@ -1,0 +1,22 @@
+{
+  "recorded_at_utc": "2026-10-10T08:06:28.8961175Z",
+  "run_started_at_local": "2026-10-10T13:31:01+05:30",
+  "git_commit": "47154b63bb4660c252429b41044382b69733b326",
+  "windows": "Microsoft Windows 11 Home Single Language",
+  "gpu": "NVIDIA GeForce RTX 5050 Laptop GPU, 592.82, 8151 MiB",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-13620H",
+  "memory_gib": 23.6,
+  "docker_version": "29.8.2",
+  "benchmark_image": "appajidheeraj/dynamic-batch-formation-simulator:latest (locally built by docker compose build)",
+  "benchmark_image_id": "sha256:c0917fc63e7f6d81745903354d870405397867f439bc4184b3ee968e727d7486",
+  "ghcr_tested_image": "ghcr.io/appajidheeraj/dynamic-batch-formation-simulator:latest",
+  "ghcr_digest": "sha256:78378a8cfc8072f658a045877eade099bbb842f21adbe8ab18f1e2392ceae96d",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "batch_size": 4,
+  "dynamic_wait_ms": 25,
+  "repetitions": 3,
+  "power_scheme": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
+  "ac_power_status": 2,
+  "validation": "18 summaries, 18 request CSVs, 18 step CSVs, 8 PNGs; all content checks passed",
+  "note": "One transient Hugging Face DNS retry in run.log; process recovered and completed."
+}
