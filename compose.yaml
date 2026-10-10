@@ -1,5 +1,6 @@
 services:
   benchmark:
+    image: appajidheeraj/dynamic-batch-formation-simulator:latest
     build: .
     command: python -m batch_bench.experiment
     volumes:
