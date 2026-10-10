@@ -1,0 +1,24 @@
+ Container dynamic-batch-formation-simulator-benchmark-run-ea1ce2cfa57f Creating 
+ Container dynamic-batch-formation-simulator-benchmark-run-ea1ce2cfa57f Created 
+fixed: wrote results/dense/run_1/fixed
+dynamic: wrote results/dense/run_1/dynamic
+continuous: wrote results/dense/run_1/continuous
+dynamic: wrote results/dense/run_2/dynamic
+continuous: wrote results/dense/run_2/continuous
+fixed: wrote results/dense/run_2/fixed
+continuous: wrote results/dense/run_3/continuous
+fixed: wrote results/dense/run_3/fixed
+dynamic: wrote results/dense/run_3/dynamic
+wrote graphs to results/dense
+fixed: wrote results/sparse/run_1/fixed
+dynamic: wrote results/sparse/run_1/dynamic
+continuous: wrote results/sparse/run_1/continuous
+dynamic: wrote results/sparse/run_2/dynamic
+continuous: wrote results/sparse/run_2/continuous
+'(MaxRetryError('HTTPSConnectionPool(host=\'huggingface.co\', port=443): Max retries exceeded with url: /Qwen/Qwen2.5-0.5B-Instruct/resolve/main/tokenizer_config.json (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x77e416fb2310>: Failed to resolve \'huggingface.co\' ([Errno -5] No address associated with hostname)"))'), '(Request ID: 3607d344-0b85-49df-a820-74a47ebea3a3)')' thrown while requesting HEAD https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct/resolve/main/tokenizer_config.json
+Retrying in 1s [Retry 1/5].
+fixed: wrote results/sparse/run_2/fixed
+continuous: wrote results/sparse/run_3/continuous
+fixed: wrote results/sparse/run_3/fixed
+dynamic: wrote results/sparse/run_3/dynamic
+wrote graphs to results/sparse
