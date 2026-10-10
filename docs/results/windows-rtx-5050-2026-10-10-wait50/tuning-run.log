@@ -1,0 +1,22 @@
+ Container dynamic-batch-formation-simulator-benchmark-run-347cb61100f4 Creating 
+ Container dynamic-batch-formation-simulator-benchmark-run-347cb61100f4 Created 
+START wait=25 workload=dense
+dynamic: wrote results/tuning/w25/dense/dynamic
+START wait=25 workload=sparse
+dynamic: wrote results/tuning/w25/sparse/dynamic
+START wait=50 workload=dense
+dynamic: wrote results/tuning/w50/dense/dynamic
+START wait=50 workload=sparse
+dynamic: wrote results/tuning/w50/sparse/dynamic
+START wait=100 workload=dense
+dynamic: wrote results/tuning/w100/dense/dynamic
+START wait=100 workload=sparse
+dynamic: wrote results/tuning/w100/sparse/dynamic
+START wait=200 workload=dense
+dynamic: wrote results/tuning/w200/dense/dynamic
+START wait=200 workload=sparse
+dynamic: wrote results/tuning/w200/sparse/dynamic
+START wait=400 workload=dense
+dynamic: wrote results/tuning/w400/dense/dynamic
+START wait=400 workload=sparse
+dynamic: wrote results/tuning/w400/sparse/dynamic

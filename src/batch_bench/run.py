@@ -187,7 +187,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--workload", type=Path, default=Path("workloads/prompts.jsonl"))
     parser.add_argument("--model", default="Qwen/Qwen2.5-0.5B-Instruct")
     parser.add_argument("--batch-size", type=int, default=4)
-    parser.add_argument("--dynamic-wait-ms", type=float, default=25)
+    parser.add_argument("--dynamic-wait-ms", type=float, default=50)
     parser.add_argument("--output-dir", type=Path, default=Path("results"))
     parser.add_argument("--max-requests", type=int)
     parser.add_argument("--repetitions", type=int, default=1)

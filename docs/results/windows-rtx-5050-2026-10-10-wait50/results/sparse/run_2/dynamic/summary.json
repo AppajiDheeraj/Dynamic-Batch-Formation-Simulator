@@ -1,0 +1,16 @@
+{
+  "strategy": "dynamic",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "request_count": 30,
+  "batch_size": 4,
+  "dynamic_wait_ms": 50.0,
+  "makespan_ms": 13074.666214,
+  "output_tokens": 960,
+  "output_token_throughput_per_s": 73.42443656206365,
+  "request_throughput_per_s": 2.294513642564489,
+  "p50_latency_ms": 1242.8412010000002,
+  "p95_latency_ms": 1590.7774669500004,
+  "p50_ttft_ms": 474.62941500000034,
+  "p95_ttft_ms": 946.4339162999995,
+  "peak_cuda_memory_bytes": 1030166016
+}

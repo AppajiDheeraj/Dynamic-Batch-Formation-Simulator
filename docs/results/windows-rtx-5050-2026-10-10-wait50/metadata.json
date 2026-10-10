@@ -1,0 +1,21 @@
+{
+  "recorded_at_utc": "2026-10-10T08:26:40.991448Z",
+  "source_commit": "2201c5c2896f4bdb3e9733069e42bb5baf5321e4",
+  "windows": "Microsoft Windows 11 Home Single Language",
+  "gpu": "NVIDIA GeForce RTX 5050 Laptop GPU, 592.82, 8151 MiB",
+  "cpu": "13th Gen Intel(R) Core(TM) i7-13620H",
+  "memory_gib": 23.6,
+  "docker_version": "29.8.2",
+  "benchmark_image": "appajidheeraj/dynamic-batch-formation-simulator:latest (locally built by docker compose build)",
+  "benchmark_image_id": "sha256:c0917fc63e7f6d81745903354d870405397867f439bc4184b3ee968e727d7486",
+  "model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "batch_size": 4,
+  "dynamic_wait_ms": 50,
+  "repetitions": 3,
+  "power_scheme": "Power Scheme GUID: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (High performance)",
+  "ac_power_status": 2,
+  "network_mode": "HF_HUB_OFFLINE=1, using previously downloaded model cache",
+  "tuning_note": "50 ms selected after exploratory one-run sweep of 25, 50, 100, 200, 400 ms on same workloads; not independent validation",
+  "benchmark_command": "For each workload: python -m batch_bench.run --strategy all --repetitions 3 --dynamic-wait-ms 50 --workload workloads/<workload>.jsonl --output-dir results/tuning/final50/<workload>",
+  "graph_note": "Graphs regenerated from saved final50 CSV/JSON results after adding workload and metric-direction labels; measurements unchanged"
+}
