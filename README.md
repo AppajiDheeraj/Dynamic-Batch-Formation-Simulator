@@ -1,4 +1,8 @@
+<div align="center">
+
 # Dynamic Batch Formation Simulator
+
+**A Docker benchmark for fixed, dynamic, and continuous LLM batching on an NVIDIA GPU.**
 
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/docker.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20%2F%20CD)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/actions/workflows/docker.yml)
 [![Docker pulls](https://img.shields.io/docker/pulls/appajidheeraj/dynamic-batch-formation-simulator?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/appajidheeraj/dynamic-batch-formation-simulator)
@@ -6,9 +10,13 @@
 [![GitHub release](https://img.shields.io/github/v/release/AppajiDheeraj/Dynamic-Batch-Formation-Simulator?style=for-the-badge&logo=github)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/releases/latest)
 [![Python](https://img.shields.io/badge/Python-3.10%E2%80%933.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 
+</div>
+
+## Overview
+
 This project compares fixed, dynamic, and continuous batching with real LLM inference. Each run loads the same Qwen model and uses the same saved requests. Only the scheduling rule changes.
 
-## What it uses
+## Technology
 
 - Python 3.11 in the Docker image
 - PyTorch and Hugging Face Transformers
@@ -18,7 +26,7 @@ This project compares fixed, dynamic, and continuous batching with real LLM infe
 
 There is no HTTP server. There is no `curl`, Ollama, LM Studio, or vLLM process. A Python runner sends the saved workload straight to the shared inference engine.
 
-## Windows setup
+## Quick start on Windows
 
 Install these items on the RTX laptop:
 
@@ -128,7 +136,20 @@ The `Docker` workflow tests and builds every pull request. Pushes to `main` publ
 
 Repository maintainers must configure a Docker Hub access token as the `DOCKERHUB_TOKEN` GitHub Actions secret. The Docker Hub username is stored as the `DOCKERHUB_USERNAME` repository variable.
 
-The measured graphs used in the report are stored under `docs/figures/`. Raw CSV and JSON results stay under the ignored `results/` directory.
+The measured graphs used in the report are stored under `docs/figures/`. Raw data for the reported run is committed under `docs/results/windows-rtx-5050-2026-10-10-wait50/`. Fresh runs still write to the ignored `results/` directory.
+
+## Submission
+
+Create `appaji_241CS110.zip` with exactly these three items at its top level:
+
+```text
+appaji_241CS110.zip
+├── Dynamic-Batch-Formation-Simulator/
+├── EXPERIMENTAL_REPORT.pdf
+└── readme.txt
+```
+
+Exclude `.venv`, `.git`, `.pytest_cache`, and `.DS_Store` from the project folder. The repository copy of the report is `docs/EXPERIMENTAL_REPORT.pdf`, and the submission note is `submission/readme.txt`.
 
 ## References
 

@@ -8,3 +8,5 @@ dist/
 results/*
 !results/.gitkeep
 .DS_Store
+AGENTS.md
+CLAUDE.md
