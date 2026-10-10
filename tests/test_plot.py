@@ -64,3 +64,26 @@ def test_create_plots_uses_median_and_run_range(tmp_path, monkeypatch) -> None:
 
     assert calls[0][3] == [[3, 3, 3]]
     assert calls[0][5] == [[[2, 2, 2], [97, 97, 97]]]
+
+
+def test_bar_labels_small_nonzero_values(tmp_path, monkeypatch) -> None:
+    from matplotlib.figure import Figure
+
+    labels = []
+    original_savefig = Figure.savefig
+
+    def capture_labels(figure, *args, **kwargs):
+        labels.extend(text.get_text() for text in figure.axes[0].texts)
+        return original_savefig(figure, *args, **kwargs)
+
+    monkeypatch.setattr(Figure, "savefig", capture_labels)
+    plot._bar(
+        tmp_path / "ttft.png",
+        "Sparse TTFT",
+        "milliseconds",
+        [[586.3, 477.9, 34.5], [1226.8, 993.1, 45.5]],
+        ["p50", "p95"],
+    )
+
+    assert "34.5" in labels
+    assert "45.5" in labels

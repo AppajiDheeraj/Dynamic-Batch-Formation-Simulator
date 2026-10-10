@@ -25,11 +25,26 @@ def _bar(
     figure, axis = plt.subplots(figsize=(7, 4))
     x = range(len(STRATEGIES))
     width = 0.8 / len(values)
+    top = 0.0
     for offset, (series, label) in enumerate(zip(values, labels)):
         positions = [position - 0.4 + width / 2 + offset * width for position in x]
         yerr = None if errors is None else errors[offset]
-        axis.bar(positions, series, width, label=label, yerr=yerr, capsize=4)
+        bars = axis.bar(positions, series, width, label=label, yerr=yerr, capsize=4)
+        for index, (bar, value) in enumerate(zip(bars, series)):
+            upper = value if yerr is None else value + yerr[1][index]
+            top = max(top, upper)
+            axis.annotate(
+                f"{value:,.1f}",
+                (bar.get_x() + bar.get_width() / 2, upper),
+                xytext=(0, 3),
+                textcoords="offset points",
+                ha="center",
+                fontsize=8,
+            )
     axis.set_xticks(list(x), STRATEGIES)
+    axis.set_ylim(0, top * 1.15 if top else 1)
+    axis.set_axisbelow(True)
+    axis.grid(axis="y", alpha=0.2)
     axis.set_title(title)
     axis.set_ylabel(ylabel)
     if len(values) > 1:

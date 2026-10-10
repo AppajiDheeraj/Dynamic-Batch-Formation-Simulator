@@ -90,6 +90,8 @@ Continuous batching achieved the highest dense throughput and the lowest dense p
 
 ![Sparse time to first token](figures/sparse_ttft.png)
 
+The continuous bars in the TTFT chart are 34.53 ms (p50) and 45.51 ms (p95), not zero. They look small because the same linear axis also shows fixed and dynamic values above 900 ms. TTFT ends at the first token; total request latency ends at the last token, so the corresponding continuous latency values are 736.47 ms and 1151.14 ms. Labels show medians of three runs and whiskers span the minimum to maximum run value.
+
 ![Sparse average active batch size](figures/sparse_batch_size.png)
 
 Sparse throughput was similar because the arrival schedule dominated the makespan. At the tuned 50 ms limit, dynamic improved p50 latency by 17%, p95 latency by 27%, p50 TTFT by 18%, and p95 TTFT by 19% compared with fixed. Continuous batching admitted requests into free slots and achieved the lowest latency and TTFT.
