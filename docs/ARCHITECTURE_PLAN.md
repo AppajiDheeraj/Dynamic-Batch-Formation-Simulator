@@ -70,4 +70,4 @@ The first version recomputes full active sequences with `use_cache=False`. All s
 
 ## Submission artifacts
 
-The repository includes the Docker benchmark, both workloads, report source, measured graphs, and PDF report. Raw per-request and per-step measurements remain under the ignored `results/` directory because they are reproducible with the Compose command.
+The repository includes the Docker benchmark, both workloads, report source, measured graphs, and PDF report. Raw data for the reported run is committed under `docs/results/windows-rtx-5050-2026-10-10-wait50/`. Fresh runs remain under the ignored `results/` directory and can be reproduced with the Compose command.
