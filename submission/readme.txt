@@ -23,6 +23,6 @@ docker compose run --rm benchmark
 
 Report and results
 - Report: docs/EXPERIMENTAL_REPORT.pdf
-- Report source: docs/EXPERIMENTAL_REPORT.md
+- Report source (LaTeX, Overleaf-ready): docs/EXPERIMENTAL_REPORT.tex
 - Reported raw results: docs/results/windows-rtx-5050-2026-10-10-wait50/
 - Fresh local results: results/
