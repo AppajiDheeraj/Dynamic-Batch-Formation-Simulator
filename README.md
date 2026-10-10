@@ -2,6 +2,7 @@
 
 [![CI/CD](https://img.shields.io/github/actions/workflow/status/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/docker.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20%2F%20CD)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/actions/workflows/docker.yml)
 [![Docker pulls](https://img.shields.io/docker/pulls/appajidheeraj/dynamic-batch-formation-simulator?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/appajidheeraj/dynamic-batch-formation-simulator)
+[![GHCR package](https://img.shields.io/badge/GHCR-Package-181717?style=for-the-badge&logo=github)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/pkgs/container/dynamic-batch-formation-simulator)
 [![GitHub release](https://img.shields.io/github/v/release/AppajiDheeraj/Dynamic-Batch-Formation-Simulator?style=for-the-badge&logo=github)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/releases/latest)
 [![Python](https://img.shields.io/badge/Python-3.10%E2%80%933.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 
@@ -45,6 +46,12 @@ Or pull the prebuilt image from Docker Hub:
 
 ```powershell
 docker pull appajidheeraj/dynamic-batch-formation-simulator:latest
+```
+
+The same image is also published to GitHub Container Registry:
+
+```powershell
+docker pull ghcr.io/appajidheeraj/dynamic-batch-formation-simulator:latest
 ```
 
 Run the CPU-only scheduler tests:
@@ -117,7 +124,7 @@ Test the chosen batch size on the target 3 GB to 4 GB RTX GPU. Lower `--batch-si
 
 ## GitHub workflow
 
-The `Docker` workflow tests and builds every pull request. Pushes to `main` publish `latest` and commit-SHA tags to Docker Hub; version tags such as `v0.1.0` also publish the matching semantic-version tag.
+The `Docker` workflow tests and builds every pull request. Pushes to `main` publish `latest` and commit-SHA tags to Docker Hub and GitHub Container Registry; version tags such as `v0.1.0` also publish the matching semantic-version tag.
 
 Repository maintainers must configure a Docker Hub access token as the `DOCKERHUB_TOKEN` GitHub Actions secret. The Docker Hub username is stored as the `DOCKERHUB_USERNAME` repository variable.
 
