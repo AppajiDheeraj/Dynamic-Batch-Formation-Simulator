@@ -1,0 +1,22 @@
+ Container dynamic-batch-formation-simulator-benchmark-run-674f8ccadacb Creating 
+ Container dynamic-batch-formation-simulator-benchmark-run-674f8ccadacb Created 
+fixed: wrote results/tuning/final50/dense/run_1/fixed
+dynamic: wrote results/tuning/final50/dense/run_1/dynamic
+continuous: wrote results/tuning/final50/dense/run_1/continuous
+dynamic: wrote results/tuning/final50/dense/run_2/dynamic
+continuous: wrote results/tuning/final50/dense/run_2/continuous
+fixed: wrote results/tuning/final50/dense/run_2/fixed
+continuous: wrote results/tuning/final50/dense/run_3/continuous
+fixed: wrote results/tuning/final50/dense/run_3/fixed
+dynamic: wrote results/tuning/final50/dense/run_3/dynamic
+wrote graphs to results/tuning/final50/dense
+fixed: wrote results/tuning/final50/sparse/run_1/fixed
+dynamic: wrote results/tuning/final50/sparse/run_1/dynamic
+continuous: wrote results/tuning/final50/sparse/run_1/continuous
+dynamic: wrote results/tuning/final50/sparse/run_2/dynamic
+continuous: wrote results/tuning/final50/sparse/run_2/continuous
+fixed: wrote results/tuning/final50/sparse/run_2/fixed
+continuous: wrote results/tuning/final50/sparse/run_3/continuous
+fixed: wrote results/tuning/final50/sparse/run_3/fixed
+dynamic: wrote results/tuning/final50/sparse/run_3/dynamic
+wrote graphs to results/tuning/final50/sparse

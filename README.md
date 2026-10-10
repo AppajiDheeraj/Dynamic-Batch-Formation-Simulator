@@ -114,7 +114,7 @@ Test the chosen batch size on the target 3 GB to 4 GB RTX GPU. Lower `--batch-si
 --workload workloads/prompts.jsonl
 --model Qwen/Qwen2.5-0.5B-Instruct
 --batch-size 4
---dynamic-wait-ms 25
+--dynamic-wait-ms 50
 --max-requests 2
 --output-dir results
 --repetitions 3
