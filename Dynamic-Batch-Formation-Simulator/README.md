@@ -4,7 +4,6 @@
 
 **A Docker benchmark for fixed, dynamic, and continuous LLM batching on an NVIDIA GPU.**
 
-[![CI/CD](https://img.shields.io/github/actions/workflow/status/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/docker.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=CI%20%2F%20CD)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/actions/workflows/docker.yml)
 [![Docker pulls](https://img.shields.io/docker/pulls/appajidheeraj/dynamic-batch-formation-simulator?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/r/appajidheeraj/dynamic-batch-formation-simulator)
 [![GHCR package](https://img.shields.io/badge/GHCR-Package-181717?style=for-the-badge&logo=github)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/pkgs/container/dynamic-batch-formation-simulator)
 [![GitHub release](https://img.shields.io/github/v/release/AppajiDheeraj/Dynamic-Batch-Formation-Simulator?style=for-the-badge&logo=github)](https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator/releases/latest)
@@ -42,11 +41,11 @@ nvidia-smi
 docker run --rm --gpus all nvidia/cuda:12.8.1-base-ubuntu22.04 nvidia-smi
 ```
 
-Clone the repository and build the image:
+Clone the repository, enter the project folder, and build the image. All later commands run from this project folder:
 
 ```powershell
 git clone https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator.git
-cd Dynamic-Batch-Formation-Simulator
+cd Dynamic-Batch-Formation-Simulator/Dynamic-Batch-Formation-Simulator
 docker compose build
 ```
 
@@ -130,26 +129,22 @@ Test the chosen batch size on the target 3 GB to 4 GB RTX GPU. Lower `--batch-si
 
 `--repetitions` is available with `--strategy all`. The default is one run for quick checks.
 
-## GitHub workflow
-
-The `Docker` workflow tests and builds every pull request. Pushes to `main` publish `latest` and commit-SHA tags to Docker Hub and GitHub Container Registry; version tags such as `v0.1.0` also publish the matching semantic-version tag.
-
-Repository maintainers must configure a Docker Hub access token as the `DOCKERHUB_TOKEN` GitHub Actions secret. The Docker Hub username is stored as the `DOCKERHUB_USERNAME` repository variable.
+## Results data
 
 The measured graphs used in the report are stored under `docs/figures/`. Raw data for the reported run is committed under `docs/results/windows-rtx-5050-2026-10-10-wait50/`. Fresh runs still write to the ignored `results/` directory.
 
-## Submission
+The Docker Hub and GitHub Container Registry images were published by the workflow in `.github/workflows/docker.yml`. GitHub only runs workflows from the repository root, so this copy is kept for reference.
 
-Create `appaji_241CS110.zip` with exactly these three items at its top level:
+## Repository layout
 
 ```text
-appaji_241CS110.zip
-├── Dynamic-Batch-Formation-Simulator/
-├── EXPERIMENTAL_REPORT.pdf
-└── readme.txt
+Dynamic-Batch-Formation-Simulator/        repository root
+├── Dynamic-Batch-Formation-Simulator/    project folder (code, Docker files, workloads, tests, docs)
+├── EXPERIMENTAL_REPORT.pdf               project report
+└── readme.txt                            submission note
 ```
 
-Exclude `.venv`, `.git`, `.pytest_cache`, and `.DS_Store` from the project folder. The repository copy of the report is `docs/EXPERIMENTAL_REPORT.pdf`, and the submission note is `submission/readme.txt`.
+The LaTeX and Markdown sources of the report are in `docs/` inside the project folder. Team and mentor details are in [`INFO.md`](INFO.md).
 
 ## References
 

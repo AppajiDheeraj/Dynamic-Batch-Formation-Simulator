@@ -28,8 +28,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: Dynamic-Batch-Formation-Simulator/pyproject.toml
 
       - name: Test
+        working-directory: Dynamic-Batch-Formation-Simulator
         run: |
           pip install -e ".[test]"
           pytest -q
@@ -62,7 +64,7 @@ jobs:
 
       - uses: docker/build-push-action@v7
         with:
-          context: .
+          context: Dynamic-Batch-Formation-Simulator
           push: ${{ github.event_name != 'pull_request' && env.DOCKERHUB_TOKEN != '' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
