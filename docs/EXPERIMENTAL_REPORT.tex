@@ -41,19 +41,18 @@ Mentor: Balaji N K
 \maketitle
 
 \section{Introduction}
-An LLM server receives requests at different times, and each request asks for a different number of output tokens. The server must decide which requests go to the GPU together. This decision is the batching strategy. It changes how much work the GPU does per step and how long each user waits.
+LLM servers receive requests at various times. These requests require various numbers of output tokens. As such there has to be some batching strategy implemented to determine how these requests are assigned to the GPU. This will affect how busy the GPU is for each step and the amount of time users have to wait.
 
-We implemented three batching strategies and measured them with a real model on a real GPU. The strategies are fixed batching, dynamic batching, and continuous batching. We did not simulate token timings. Each run loads \texttt{Qwen/Qwen2.5-0.5B-Instruct} in FP16 and generates every token on an NVIDIA RTX GPU inside a Docker container.
+We have implemented 3 batching strategies. We have then measured these using a real model and real GPU. The strategies we have implemented include fixed batching, dynamic batching and continuous batching. There were no simulations involving token timings. For each run \texttt{Qwen/Qwen2.5-0.5B-Instruct} was loaded into the GPU. This was done in FP16 and each token was generated using an NVIDIA RTX GPU. This was done in a Docker container.
 
-We measured four things for each strategy:
+We measured:
 \begin{itemize}
-    \item output-token throughput,
-    \item request latency at p50 and p95,
-    \item time to first token (TTFT) at p50 and p95,
-    \item the average number of active requests per token step.
+    \item Number of output tokens per second.
+    \item Latency of requests (p50/p95).
+    \item Time to first token (p50/p95).
+    \item Average number of active requests per token step.
 \end{itemize}
-
-The source code, Docker files, raw results, and graphs are in the repository at \url{https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator}.
+The source code, Docker files and raw data can be found at the following repository: \url{https://github.com/AppajiDheeraj/Dynamic-Batch-Formation-Simulator}.
 
 \section{Background}
 
@@ -61,12 +60,12 @@ The source code, Docker files, raw results, and graphs are in the repository at 
 A GPU can process several sequences in one tensor operation. For a small model, one token step reads all the model weights from GPU memory. If four sequences share that step, the model reads the weights once for four tokens instead of once for one token. Batching therefore increases throughput. The cost is waiting time. If the server waits to collect a large batch, the first request in that batch waits too.
 
 \subsection{Request-level scheduling}
-In request-level scheduling, the server forms a batch and keeps it closed until every request in it finishes. Our fixed and dynamic strategies use this rule. A short request that finishes early leaves its slot empty. The slot stays empty until the longest request in the batch finishes, even if new requests are waiting.
+In request-level scheduling, requests are grouped into batches. The batch is not released until all requests within it have been completed. This is what our static and dynamic strategies do. If any request completes early (e.g., a small request), then the slot will remain empty until the longest request has completed.
 
 \subsection{Iteration-level scheduling}
-ORCA (OSDI 2022) introduced iteration-level scheduling for generative models \cite{orca}. The scheduler makes a new decision after every token step instead of after every batch. A finished request leaves at once, and a waiting request can take its slot at the next step. This idea is now called continuous batching. Our continuous strategy implements it.
+ORCA \cite{orca} (OSDI 2022) introduced per-iteration scheduling for generative models. Rather than schedule each batch, each token step is scheduled using a scheduler. When a request completes, it is immediately released. This allows requests that are waiting to be scheduled into that slot at the next step. This concept is known as continuous batching. We implement this with our continuous approach.
 
-vLLM adds PagedAttention to continuous batching \cite{vllm}. PagedAttention stores the key-value (KV) cache in fixed-size blocks, so the engine wastes less GPU memory and can keep more sequences active. We did not use vLLM or copy its scheduler. We wrote one small inference engine and changed only the admission rule between tests. This design keeps the model path fixed and makes the admission rule the main controlled difference.
+vLLM provides us with the PagedAttention mechanism \cite{vllm} to support continuous batching. This uses static sized blocks for storing the KV cache. This allows the engine to use less GPU memory and have more sequences running. However, we do not use vLLM nor its scheduler. We implemented one small inference engine, where the only thing that changes between different tests is the admission rule. This ensures the model remains constant and the main variable is the admission rule.
 
 \section{System design}
 
@@ -324,13 +323,13 @@ Continuous & \textbf{75.94} & \textbf{736.47} & \textbf{1151.14} & \textbf{34.53
     \label{fig:sparse_bs}
 \end{figure}
 
-Throughput was almost equal for all three strategies, between 73.42 and 75.94 tokens/s. The arrival schedule dominates this number. The last request arrives at 11.6 s, and the median makespan of each strategy was between 12.6 s and 13.1 s.
+All strategies achieved similar throughput rates between 73.42 and 75.94 tokens per second. This is heavily influenced by the arrival pattern. The final request comes in at 11.6s, so the median make-span ranges from 12.6s to 13.1s.
 
-Latency is where the strategies differ. Fixed batching waits for four requests. At a 400 ms gap, that wait is up to 1.2 s, and the TTFT graph shows it. Dynamic batching cuts the wait at 50 ms. Compared with fixed, it lowered p50 latency by 17\%, p95 latency by 27\%, p50 TTFT by 18\%, and p95 TTFT by 19\%. Continuous batching admits each request on the next step after it arrives. Its p50 TTFT was 34.53 ms, which is 17 times lower than fixed. Its p50 latency was 736.47 ms, about half of the fixed value.
+However, the differences come when considering the latency. The fixed batching results in waiting for 4 requests. At a gap of 400ms, this results in a maximum waiting time of 1.2s (as seen in the TTFT graph). Dynamic batching reduces this waiting time. It reduced the p50 latency by 17\%, the p95 latency by 27\%, the p50 TTFT by 18\% and the p95 TTFT by 19\% compared to the fixed. Continuous batching results in processing each request immediately after it has arrived. This resulted in a much lower p50 TTFT of 34.53ms (17x lower) and p50 latency of 736.47ms (Half the value of the fixed).
 
-The continuous TTFT bars in Figure~\ref{fig:sparse_ttft} are small but not zero. They look flat because the same axis also shows fixed and dynamic values above 900 ms. The numbers on the bars give the exact values.
+The TTFT bars are very low in Figure~\ref{fig:sparse_ttft}. These appear flat due to the fixed and dynamic results having values over 900ms on the same axis. However, the exact TTFT values can be seen using the values on the bars.
 
-The average batch size of continuous (1.76) is smaller than fixed (2.50) in this workload. This is the expected trade. Fixed fills its batches by making requests wait. Continuous starts work at once with fewer requests on the GPU, and the arrival rate is too low to fill more slots.
+The average batch size for continuous batching is 1.76, which is less than the fixed batching of 2.50. As expected, the fixed batching creates full batches by waiting for requests to come in. However, continuous batching processes requests immediately so there are fewer requests on the GPU. The arrival rate is too low to fill more slots.
 
 \subsection{GPU memory}
 Table~\ref{tab:mem} gives the median peak CUDA memory that PyTorch allocated after warm-up.
@@ -367,11 +366,13 @@ Other limits:
 \end{itemize}
 
 \section{Conclusion}
-Continuous batching gave the best result on both workloads in our setup. Under dense load, it raised throughput by 38\% because it kept 3.71 of 4 slots busy, against 2.50 for the closed-batch strategies. Under sparse load, it cut the median time to first token from 586 ms to 35 ms because no request waited for a batch to fill.
+In our setup Continuous batching performed best on both workloads. At high loads, we saw a 38\% increase in throughput due to high slot utilisation (3.71/4) compared to closed-batch strategies (2.50)
 
-Dynamic batching is a partial fix. Its deadline helped under sparse arrivals, where it cut p95 latency by 27\% compared with fixed. Under dense arrivals, it behaved like fixed batching because it still keeps each batch closed until the longest request ends.
+At low loads, we saw a huge reduction in median first token latency to 35ms compared to 586ms with Dynamic batching. As there was no need to wait for batches to fill.
 
-The main lesson for us is that the closed batch is the real problem, not the batch size. Fixed and dynamic batching differ only in when a batch starts. Both waste slots after short requests finish. ORCA's step-level admission removes that waste, and our measurements on a 0.5B model show the effect clearly even at batch size 4.
+Dynamic batching provided some improvement. With a deadline, we saw a 27\% reduction in p95 latency at low arrival rates. However, it behaves identically to fixed batching at high arrival rates as batches will always be closed until the longest request has finished.
+
+Overall, the key takeaway was that the problem was the closed batch. Fixed and dynamic batching just differ in how they begin a batch. This leads to wasted slots after short requests have completed. ORCA removes this by using step level admissions. We can see this clearly in our results with a 0.5B model. Even with a batch size of 4.
 
 \begin{thebibliography}{9}
 \bibitem{orca} G.-I. Yu, J. S. Jeong, G.-W. Kim, S. Kim, and B.-G. Chun. ORCA: A Distributed Serving System for Transformer-Based Generative Models. In \emph{16th USENIX Symposium on Operating Systems Design and Implementation (OSDI 22)}, 2022. \url{https://www.usenix.org/conference/osdi22/presentation/yu}
