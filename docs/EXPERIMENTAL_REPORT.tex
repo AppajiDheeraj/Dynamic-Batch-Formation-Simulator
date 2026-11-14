@@ -20,30 +20,25 @@
     citecolor=black,
     urlcolor=blue,
     pdftitle={Dynamic Batch Formation Simulator},
-    pdfauthor={Team 16}
+    pdfauthor={Appaji Nagaraja Dheeraj, Rishinandan D R, Ashlesh Prabhu, Sachin Rohra}
 }
 
 \title{Dynamic Batch Formation Simulator \\
 Fixed, Dynamic, and Continuous Batching for LLM Inference}
 
 \author{
-Team 16 \\[4pt]
-Appaji Nagaraja Dheeraj (241CS110), team leader \\
-Rishinandan D R (241CS145) \\
-Ashlesh Prabhu (241CS214) \\
-Sachin Rohra (241CS251) \\[4pt]
-Mentor: Balaji (\texttt{balajink252is009@nitk.edu.in})
+\resizebox{0.95\textwidth}{!}{\begin{tabular}{cccc}
+\textbf{Appaji Nagaraja Dheeraj} & \textbf{Rishinandan D R} & \textbf{Ashlesh Prabhu} & \textbf{Sachin Rohra} \\
+241CS110 & 241CS145 & 241CS214 & 241CS251
+\end{tabular}} \\[6pt]
+Mentor: Balaji N K
 }
 
-\date{October 2026}
+\date{November 14, 2026}
 
 \begin{document}
 
 \maketitle
-
-\begin{abstract}
-This report compares fixed, dynamic, and continuous batching for LLM inference. All three policies use the same Qwen model and inference code. Only the request admission rule changes. On the dense workload, continuous batching reached 154.40 output tokens per second, against 111.89 for fixed batching. On the sparse workload, it reduced median time to first token from 586.26 ms to 34.53 ms. These results apply to the tested model, GPU, workloads, and batch size.
-\end{abstract}
 
 \section{Introduction}
 An LLM server receives requests at different times, and each request asks for a different number of output tokens. The server must decide which requests go to the GPU together. This decision is the batching strategy. It changes how much work the GPU does per step and how long each user waits.
