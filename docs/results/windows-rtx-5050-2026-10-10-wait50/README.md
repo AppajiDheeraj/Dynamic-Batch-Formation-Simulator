@@ -28,7 +28,7 @@ for workload in ("dense", "sparse"):
     create_plots(evidence / workload, repetitions=3)
 ```
 
-Copy the eight regenerated PNG files to `docs/figures/` using the `{workload}_{metric}.png` names used by the Markdown report. `docs/EXPERIMENTAL_REPORT.md` contains the numerical tables and interpretations; the rendered copy is `EXPERIMENTAL_REPORT.pdf` at the repository root, next to this project folder.
+Copy the eight regenerated PNG files to `docs/figures/` using the `{workload}_{metric}.png` names used by the Markdown report. `docs/EXPERIMENTAL_REPORT.md` contains the numerical tables and interpretations; `docs/EXPERIMENTAL_REPORT.pdf` is the rendered copy.
 
 ## Verification
 

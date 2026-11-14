@@ -14,6 +14,14 @@
 \usetikzlibrary{positioning,arrows.meta}
 
 \geometry{margin=1in}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue,
+    pdftitle={Dynamic Batch Formation Simulator},
+    pdfauthor={Team 16}
+}
 
 \title{Dynamic Batch Formation Simulator \\
 Fixed, Dynamic, and Continuous Batching for LLM Inference}
@@ -32,6 +40,10 @@ Mentor: Balaji (\texttt{balajink252is009@nitk.edu.in})
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+This report compares fixed, dynamic, and continuous batching for LLM inference. All three policies use the same Qwen model and inference code. Only the request admission rule changes. On the dense workload, continuous batching reached 154.40 output tokens per second, against 111.89 for fixed batching. On the sparse workload, it reduced median time to first token from 586.26 ms to 34.53 ms. These results apply to the tested model, GPU, workloads, and batch size.
+\end{abstract}
 
 \section{Introduction}
 An LLM server receives requests at different times, and each request asks for a different number of output tokens. The server must decide which requests go to the GPU together. This decision is the batching strategy. It changes how much work the GPU does per step and how long each user waits.
@@ -59,7 +71,7 @@ In request-level scheduling, the server forms a batch and keeps it closed until 
 \subsection{Iteration-level scheduling}
 ORCA (OSDI 2022) introduced iteration-level scheduling for generative models \cite{orca}. The scheduler makes a new decision after every token step instead of after every batch. A finished request leaves at once, and a waiting request can take its slot at the next step. This idea is now called continuous batching. Our continuous strategy implements it.
 
-vLLM adds PagedAttention to continuous batching \cite{vllm}. PagedAttention stores the key-value (KV) cache in fixed-size blocks, so the engine wastes less GPU memory and can keep more sequences active. We did not use vLLM or copy its scheduler. We wrote one small inference engine and changed only the admission rule between tests. That way, any difference in the results comes from the scheduling rule.
+vLLM adds PagedAttention to continuous batching \cite{vllm}. PagedAttention stores the key-value (KV) cache in fixed-size blocks, so the engine wastes less GPU memory and can keep more sequences active. We did not use vLLM or copy its scheduler. We wrote one small inference engine and changed only the admission rule between tests. This design keeps the model path fixed and makes the admission rule the main controlled difference.
 
 \section{System design}
 
@@ -183,7 +195,7 @@ Latency and TTFT start at the scheduled arrival, so both include time spent in t
 Each strategy ran three times on each workload, which gives 18 runs. For every metric, we report the median of the three per-run values. Error bars on the graphs span the minimum and maximum run. Every run completed all 30 requests and produced exactly 960 output tokens, so all strategies did the same work.
 
 \subsection{Choice of dynamic wait limit}
-Before the main run, we did one run of each strategy at dynamic wait limits of 25, 50, 100, 200, and 400 ms. Table~\ref{tab:sweep} shows the dynamic results.
+Before the main run, we ran dynamic batching once at wait limits of 25, 50, 100, 200, and 400 ms. Table~\ref{tab:sweep} shows those results.
 
 \begin{table}[H]
 \centering
@@ -317,7 +329,7 @@ Continuous & \textbf{75.94} & \textbf{736.47} & \textbf{1151.14} & \textbf{34.53
     \label{fig:sparse_bs}
 \end{figure}
 
-Throughput was almost equal for all three strategies, between 73.42 and 75.94 tokens/s. The arrival schedule sets this number, not the scheduler. The last request arrives at 11.6 s, and the median makespan of each strategy was between 12.6 s and 13.1 s.
+Throughput was almost equal for all three strategies, between 73.42 and 75.94 tokens/s. The arrival schedule dominates this number. The last request arrives at 11.6 s, and the median makespan of each strategy was between 12.6 s and 13.1 s.
 
 Latency is where the strategies differ. Fixed batching waits for four requests. At a 400 ms gap, that wait is up to 1.2 s, and the TTFT graph shows it. Dynamic batching cuts the wait at 50 ms. Compared with fixed, it lowered p50 latency by 17\%, p95 latency by 27\%, p50 TTFT by 18\%, and p95 TTFT by 19\%. Continuous batching admits each request on the next step after it arrives. Its p50 TTFT was 34.53 ms, which is 17 times lower than fixed. Its p50 latency was 736.47 ms, about half of the fixed value.
 
@@ -342,14 +354,14 @@ Sparse & 993.29 & 982.44 & 990.95 \\
 \end{tabular}
 \end{table}
 
-Every peak stayed near 1 GiB. Continuous batching used 30 MiB more under dense load because it kept more sequences active. This PyTorch counter does not include the CUDA context or driver memory. Even with those added, the benchmark fits the 3 to 4 GB VRAM target for this assignment.
+Every peak stayed near 1 GiB. Continuous batching used 30 MiB more under dense load because it kept more sequences active. The measured allocation is below the assignment's 3 to 4 GB VRAM target. This PyTorch counter does not include the CUDA context or driver memory, so it is not a complete measurement of device use.
 
 \section{Limitations}
 The engine runs real Qwen inference, but it calls the model with \texttt{use\_cache=False}. At each token step, it recomputes attention over the full prompt and all earlier output tokens. A production server keeps a KV cache and computes only the new token.
 
-We chose this on purpose. All three strategies use the same inference path, so no strategy gets a faster model or a different memory policy. The difference in the results comes only from the admission rule. The cost is that each step does more work than necessary, so absolute latency and throughput are worse than a real server would give.
+We chose this on purpose. All three strategies use the same inference path, so no strategy gets a faster model or a different memory policy. This makes the admission rule the main controlled difference. The cost is that each step does more work than necessary, so absolute latency and throughput are worse than a production server would give.
 
-With a KV cache, every step would be faster, and all the absolute numbers would change. Cache memory would also grow with the number of active sequences, so memory would become part of the scheduling decision. We expect continuous batching to keep its lead, because the slot-refill effect does not depend on the step cost. The size of the gaps would change, though, and we did not measure it.
+With a KV cache, every step would be faster, and all the absolute numbers would change. Cache memory would also grow with the number of active sequences, so memory would become part of the scheduling decision. The slot-refill mechanism would still exist, but faster steps and cache pressure could change the size of the gaps or the final ranking. We did not test this case.
 
 Other limits:
 \begin{itemize}
