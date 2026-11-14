@@ -206,25 +206,6 @@ Fresh runs write to the ignored `results/` directory. The evidence used in the r
 └── README.md
 ```
 
-## Limits
-
-The engine calls the model with `use_cache=False`. It recomputes each active sequence at every token step. A production server would keep a KV cache and would have different absolute throughput, latency, and memory use.
-
-The comparison still controls the main variable. All three policies use the same model path and differ in admission behavior. The report applies to this model, GPU, batch size, workload, and 50 ms dynamic wait limit. It does not claim production parity with vLLM.
-
-## Submission package
-
-The GitHub repository stays in normal project form so GitHub can display this README and run the workflow. The Moodle zip uses a separate three-item wrapper:
-
-```text
-appaji_241CS110.zip
-├── Dynamic-Batch-Formation-Simulator/   project folder
-├── EXPERIMENTAL_REPORT.pdf              report copy
-└── readme.txt                           run and submission notes
-```
-
-Do not include `.git`, `.venv`, `.pytest_cache`, or `.DS_Store` in the zip.
-
 ## Team 16
 
 | Roll number | Member |
